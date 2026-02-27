@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#07070f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SmartAdams">
+<meta name="description" content="Portail étudiant intelligent pour les étudiants étrangers en Russie">
+<title>SmartAdams</title>
+
+<!-- PWA Manifest inline -->
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiU21hcnRBZGFtcyIsInNob3J0X25hbWUiOiJTbWFydEFkYW1zIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwNzA3MGYiLCJ0aGVtZV9jb2xvciI6IiMwMGU1YzAiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJyUzRSUzQ3JlY3Qgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnIHJ4PScyMCcgZmlsbD0nIzA3MDcwZicvJTNFJTNDdGV4dCB5PScuOWVtJyBmb250LXNpemU9JzgwJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyB4PSc1MCclM0Ui4oimJTNDL3RleHQlM0UlM0Mvc3ZnJTNFIiwic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #07070f;
+  --s1: #0e0e1c;
+  --s2: #151525;
+  --s3: #1e1e32;
+  --border: #22223a;
+  --a1: #00e5c0;
+  --a2: #6c5ce7;
+  --a3: #ff6b6b;
+  --a4: #ffd32a;
+  --text: #f0f0f8;
+  --muted: #60608a;
+  --g1: rgba(0,229,192,0.1);
+  --g2: rgba(108,92,231,0.1);
+  --radius: 16px;
+  --nav-h: 64px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+  overflow-x: hidden;
+  /* Desktop: centered card look */
+  box-shadow: 0 0 80px rgba(0,0,0,0.8);
+}
+
+/* BACKGROUND */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(0,229,192,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(108,92,231,0.06) 0%, transparent 50%);
+  z-index:0; pointer-events:none;
+  max-width: 480px;
+}
+
+/* ================================
+   STATUS BAR SPACE (mobile)
+================================ */
+.status-bar {
+  height: env(safe-area-inset-top, 0px);
+  background: var(--bg);
+}
+
+/* ================================
+   TOP HEADER
+================================ */
+.app-header {
+  position: sticky; top: 0;
+  background: rgba(7,7,15,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+}
+
+.header-brand {
+  display: flex; align-items: center; gap: 0.6rem;
+}
+
+.header-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--a1), var(--a2));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  box-shadow: 0 0 16px rgba(0,229,192,0.3);
+}
+
+.header-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--a1), var(--a2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-right {
+  display: flex; align-items: center; gap: 0.5rem;
+}
+
+/* Lang pills */
+.lang-pills {
+  display: flex; gap: 3px;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+}
+.lp {
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px; border: none;
+  background: none; color: var(--muted);
+  font-size: 0.72rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.lp.active { background: var(--a1); color: #000; }
+
+.icon-btn {
+  position: relative;
+  width: 36px; height: 36px;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1rem;
+  transition: border-color 0.2s;
+}
+.icon-btn:hover { border-color: var(--a1); }
+.icon-dot {
+  position: absolute; top: 6px; right: 6px;
+  width: 7px; height: 7px;
+  background: var(--a3); border-radius: 50%;
+  border: 2px solid var(--bg);
+  animation: blink 2s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ================================
+   SCROLL CONTENT
+================================ */
+.scroll-content {
+  padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 1rem);
+  position: relative; z-index: 5;
+}
+
+/* ================================
+   PAGES
+================================ */
+.page { display: none; padding: 1.25rem; }
+.page.active { display: block; animation: up 0.3s ease; }
+@keyframes up {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ================================
+   BOTTOM NAV
+================================ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 100%; max-width: 480px;
+  background: rgba(7,7,15,0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 100;
+}
+
+.nav-tab {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 0.7rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  gap: 3px;
+  border: none; background: none;
+  color: var(--muted);
+}
+
+.nav-tab.active { color: var(--a1); }
+.nav-tab-icon { font-size: 1.3rem; }
+.nav-tab-label {
+  font-size: 0.62rem; font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.nav-tab.active .nav-tab-icon {
+  filter: drop-shadow(0 0 6px var(--a1));
+}
+
+/* ================================
+   HOME PAGE
+================================ */
+.hero-card {
+  background: linear-gradient(135deg, var(--s1), var(--s2));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.hero-card::after {
+  content:'✦';
+  position:absolute; right:1rem; top:0.5rem;
+  font-size:4rem; color:rgba(0,229,192,0.06);
+  font-family:'Syne',sans-serif;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(0,229,192,0.1);
+  border: 1px solid rgba(0,229,192,0.25);
+  color: var(--a1);
+  padding: 0.25rem 0.65rem;
+  border-radius: 100px;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.hero-tag::before {
+  content:''; width:5px; height:5px;
+  background: var(--a1); border-radius: 50%;
+  animation: blink 2s infinite;
+}
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem; font-weight: 800;
+  line-height: 1.2; margin-bottom: 0.4rem;
+}
+.hero-sub { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0.75rem; margin-bottom: 1rem;
+}
+.stat-box {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  transition: all 0.25s;
+}
+.stat-box:active { transform: scale(0.97); }
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--a1), var(--a2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.stat-label { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+.sec-title {
+  font-size: 0.65rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 2px;
+  color: var(--muted);
+  margin: 1.25rem 0 0.75rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.sec-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.lesson-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.875rem 1rem;
+  display: flex; align-items: center; gap: 0.875rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s;
+}
+.lesson-card:active { transform: scale(0.98); }
+.lesson-bar { width: 3px; height: 36px; border-radius: 3px; flex-shrink: 0; }
+.lesson-info { flex: 1; min-width: 0; }
+.lesson-name {
+  font-weight: 600; font-size: 0.875rem;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.lesson-meta { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+.names-bold { font-weight: 800; font-size: 0.78rem; color: var(--text); }
+.lesson-time {
+  font-size: 0.7rem; font-weight: 700;
+  background: var(--s3); color: var(--muted);
+  padding: 0.25rem 0.5rem; border-radius: 7px;
+  white-space: nowrap;
+}
+
+.empty-state {
+  text-align: center; padding: 2rem 1rem;
+  color: var(--muted); font-size: 0.875rem;
+}
+.empty-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+/* ================================
+   SCHEDULE PAGE
+================================ */
+.week-bar {
+  display: flex; gap: 4px;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 4px;
+  margin-bottom: 1rem;
+}
+.wb {
+  flex: 1; padding: 0.5rem;
+  border-radius: 9px; border: none;
+  background: none; color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+}
+.wb.active { background: var(--a1); color: #000; }
+
+.day-block {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+.day-top {
+  padding: 0.75rem 1rem;
+  background: var(--s2);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.day-name-t {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem; font-weight: 700;
+}
+.today-chip {
+  font-size: 0.62rem; font-weight: 700;
+  background: rgba(0,229,192,0.12);
+  color: var(--a1);
+  border: 1px solid rgba(0,229,192,0.25);
+  padding: 0.15rem 0.5rem; border-radius: 100px;
+}
+.day-inner { padding: 0.4rem; }
+.sl {
+  display: flex; align-items: flex-start; gap: 0.6rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  margin-bottom: 0.35rem;
+  transition: border-color 0.2s;
+}
+.sl:active { border-color: var(--a1); }
+.sl-time { font-size: 0.67rem; color: var(--muted); font-weight: 600; min-width: 80px; padding-top: 2px; }
+.sl-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.sl-body { flex: 1; min-width: 0; }
+.sl-name { font-size: 0.82rem; font-weight: 500; line-height: 1.3; }
+.sl-sub { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+.sl-sub .names-bold { font-weight: 800; font-size: 0.78rem; color: var(--text); }
+.sl-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+.sl-badge {
+  font-size: 0.62rem; font-weight: 700;
+  padding: 0.12rem 0.45rem; border-radius: 5px;
+}
+.b-lec { background: rgba(108,92,231,0.15); color: var(--a2); }
+.b-prac { background: rgba(0,229,192,0.12); color: var(--a1); }
+.b-lab { background: rgba(255,107,107,0.12); color: var(--a3); }
+.sl-room {
+  font-size: 0.62rem; color: var(--muted);
+  background: var(--s2); padding: 0.1rem 0.4rem;
+  border-radius: 5px;
+}
+
+/* ================================
+   AI PAGE
+================================ */
+.chat-header {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  display: flex; align-items: center; gap: 0.875rem;
+  margin-bottom: 1rem;
+}
+.ai-orb {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--a1), var(--a2));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 0 20px rgba(0,229,192,0.3);
+  flex-shrink: 0;
+}
+.ai-status {
+  font-size: 0.7rem; color: var(--a1);
+  display: flex; align-items: center; gap: 4px;
+}
+.ai-status::before {
+  content:''; width:5px; height:5px;
+  background: var(--a1); border-radius: 50%;
+  animation: blink 2s infinite;
+}
+
+.chat-box {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  height: calc(100vh - 280px);
+  min-height: 300px;
+}
+.msgs-area {
+  flex: 1; overflow-y: auto;
+  padding: 1rem; display: flex; flex-direction: column; gap: 0.875rem;
+}
+.msgs-area::-webkit-scrollbar { width: 0; }
+
+.msg { display: flex; gap: 0.6rem; animation: up 0.25s ease; }
+.msg.user { flex-direction: row-reverse; }
+.m-av {
+  width: 28px; height: 28px;
+  border-radius: 9px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem;
+}
+.msg.ai .m-av { background: linear-gradient(135deg, var(--a1), var(--a2)); }
+.msg.user .m-av { background: var(--s3); border: 1px solid var(--border); }
+.m-bub {
+  max-width: 82%;
+  padding: 0.65rem 0.875rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.msg.ai .m-bub {
+  background: var(--s2); border: 1px solid var(--border);
+  border-top-left-radius: 3px;
+}
+.msg.user .m-bub {
+  background: linear-gradient(135deg, var(--a2), #4a3aad);
+  border-top-right-radius: 3px; color: #fff;
+}
+
+.chips-row {
+  padding: 0.65rem 1rem;
+  display: flex; gap: 0.4rem; flex-wrap: wrap;
+  border-top: 1px solid var(--border);
+  background: var(--s2);
+}
+.chip {
+  background: rgba(0,229,192,0.07);
+  border: 1px solid rgba(0,229,192,0.2);
+  color: var(--a1);
+  padding: 0.3rem 0.65rem;
+  border-radius: 100px;
+  font-size: 0.7rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.chip:active { background: rgba(0,229,192,0.18); }
+
+.inp-bar {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--border);
+  background: var(--s2);
+  display: flex; gap: 0.5rem;
+}
+.ai-inp {
+  flex: 1; background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.6rem 0.875rem;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  outline: none; resize: none; height: 40px;
+  transition: border-color 0.2s;
+}
+.ai-inp:focus { border-color: var(--a1); }
+.send-btn {
+  background: linear-gradient(135deg, var(--a1), #00b894);
+  border: none; border-radius: 10px;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #000; font-size: 0.9rem;
+  transition: all 0.2s; flex-shrink: 0;
+}
+.send-btn:active { transform: scale(0.95); }
+.send-btn:disabled { opacity: 0.4; }
+
+/* Translator inside AI page */
+.tr-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-top: 1rem;
+}
+.tr-title {
+  font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--muted); margin-bottom: 0.75rem;
+}
+.tr-inp {
+  width: 100%; background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 0.65rem 0.875rem;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+  resize: none; height: 80px; outline: none;
+  margin-bottom: 0.5rem;
+  transition: border-color 0.2s;
+}
+.tr-inp:focus { border-color: var(--a1); }
+.tr-btn {
+  width: 100%; background: linear-gradient(135deg, var(--a1), #00b894);
+  border: none; border-radius: 10px; padding: 0.65rem;
+  color: #000; font-weight: 700;
+  font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+  cursor: pointer; margin-bottom: 0.5rem;
+  transition: opacity 0.2s;
+}
+.tr-btn:active { opacity: 0.8; }
+.tr-out {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 0.65rem 0.875rem;
+  font-size: 0.82rem; color: var(--muted);
+  min-height: 50px; line-height: 1.5;
+}
+
+/* ================================
+   NOTIF DRAWER (bottom sheet)
+================================ */
+.notif-sheet {
+  position: fixed;
+  bottom: -100%; left: 50%;
+  transform: translateX(-50%);
+  width: 100%; max-width: 480px;
+  background: var(--s1);
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  z-index: 300;
+  transition: bottom 0.4s cubic-bezier(.4,0,.2,1);
+  max-height: 80vh;
+  display: flex; flex-direction: column;
+}
+.notif-sheet.open { bottom: 0; }
+
+.sheet-handle {
+  width: 40px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0.75rem auto 0;
+}
+.sheet-head {
+  padding: 1rem 1.25rem 0.75rem;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.sheet-title { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; }
+.sheet-close {
+  background: var(--s3); border: 1px solid var(--border);
+  color: var(--text); width: 28px; height: 28px;
+  border-radius: 8px; cursor: pointer; font-size: 0.8rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.sheet-body { overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+
+.n-item {
+  background: var(--s2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 0.875rem;
+  border-left: 3px solid var(--a1);
+}
+.n-item.warn { border-left-color: var(--a3); }
+.n-item.info { border-left-color: var(--a4); }
+.n-title { font-weight: 600; font-size: 0.85rem; margin-bottom: 0.3rem; }
+.n-body { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+.n-time { font-size: 0.65rem; color: var(--muted); margin-top: 0.4rem; }
+
+.sheet-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  z-index: 299; display: none;
+}
+.sheet-overlay.show { display: block; }
+
+/* Install prompt */
+.install-banner {
+  background: linear-gradient(135deg, rgba(0,229,192,0.1), rgba(108,92,231,0.1));
+  border: 1px solid rgba(0,229,192,0.25);
+  border-radius: 12px; padding: 0.875rem 1rem;
+  margin: 1.25rem;
+  display: flex; align-items: center; gap: 0.875rem;
+  display: none;
+}
+.install-banner.show { display: flex; }
+.install-text { flex: 1; font-size: 0.8rem; color: var(--text); }
+.install-text strong { display: block; font-size: 0.85rem; margin-bottom: 2px; }
+.install-btn {
+  background: var(--a1); border: none;
+  border-radius: 8px; padding: 0.4rem 0.875rem;
+  color: #000; font-weight: 700;
+  font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+  cursor: pointer; white-space: nowrap;
+}
+.dismiss-install {
+  background: none; border: none;
+  color: var(--muted); cursor: pointer; font-size: 1rem;
+  padding: 0.25rem;
+}
+
+/* TYPING */
+.typing { display:flex; gap:4px; align-items:center; padding:3px 0; }
+.typing span {
+  width:5px; height:5px; background:var(--a1); border-radius:50%;
+  animation:ty 1.2s infinite;
+}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes ty{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
+
+/* ================================
+   DESKTOP LAYOUT OVERRIDE
+================================ */
+@media (min-width: 481px) {
+  body {
+    min-height: 100vh;
+    margin: 0 auto;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="status-bar"></div>
+
+<!-- INSTALL BANNER -->
+<div class="install-banner" id="installBanner">
+  <span style="font-size:1.5rem">📲</span>
+  <div class="install-text">
+    <strong data-fr="Installer SmartAdams" data-ru="Установить SmartAdams">Installer SmartAdams</strong>
+    <span data-fr="Accès rapide depuis votre écran d'accueil" data-ru="Быстрый доступ с главного экрана">Accès rapide depuis votre écran d'accueil</span>
+  </div>
+  <button class="install-btn" id="installBtn" onclick="installApp()">
+    <span data-fr="Installer" data-ru="Установить">Installer</span>
+  </button>
+  <button class="dismiss-install" onclick="dismissInstall()">✕</button>
+</div>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-brand">
+    <div class="header-icon">✦</div>
+    <div class="header-name">SmartAdams</div>
+  </div>
+  <div class="header-right">
+    <div class="lang-pills">
+      <button class="lp active" onclick="setLang('fr',this)">FR</button>
+      <button class="lp" onclick="setLang('ru',this)">RU</button>
+    </div>
+    <div class="icon-btn" onclick="openNotif()">
+      🔔<div class="icon-dot"></div>
+    </div>
+  </div>
+</header>
+
+<!-- CONTENT -->
+<div class="scroll-content">
+
+  <!-- HOME -->
+  <div id="page-home" class="page active">
+    <div class="hero-card">
+      <div class="hero-tag" data-fr="Portail actif" data-ru="Портал активен">Portail actif</div>
+      <div class="hero-title" data-fr="Bonjour 👋" data-ru="Привет 👋">Bonjour 👋</div>
+      <div class="hero-sub" data-fr="Votre assistant universitaire intelligent. Emploi du temps, IA et traducteur en un clic." data-ru="Ваш умный университетский помощник. Расписание, ИИ и переводчик в одном месте.">
+        Votre assistant universitaire intelligent. Emploi du temps, IA et traducteur en un clic.
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-num" id="statToday">0</div>
+        <div class="stat-label" data-fr="Cours aujourd'hui" data-ru="Занятий сегодня">Cours aujourd'hui</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statTomorrow">0</div>
+        <div class="stat-label" data-fr="Cours demain" data-ru="Занятий завтра">Cours demain</div>
+      </div>
+    </div>
+
+    <div class="sec-title" data-fr="📅 AUJOURD'HUI" data-ru="📅 СЕГОДНЯ">📅 AUJOURD'HUI</div>
+    <div id="todayList"></div>
+
+    <div class="sec-title" data-fr="⏰ DEMAIN" data-ru="⏰ ЗАВТРА">⏰ DEMAIN</div>
+    <div id="tomorrowList"></div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div id="page-schedule" class="page">
+    <div class="week-bar">
+      <button class="wb active" onclick="setWeek('odd',this)" data-fr="Sem. Impaire" data-ru="Нечётная">Sem. Impaire</button>
+      <button class="wb" onclick="setWeek('even',this)" data-fr="Sem. Paire" data-ru="Чётная">Sem. Paire</button>
+    </div>
+    <div id="schedList"></div>
+  </div>
+
+  <!-- AI -->
+  <div id="page-ai" class="page">
+    <div class="chat-header">
+      <div class="ai-orb">✦</div>
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700">SmartAdams AI</div>
+        <div class="ai-status" data-fr="En ligne · Prêt à vous aider" data-ru="В сети · Готов помочь">En ligne · Prêt à vous aider</div>
+      </div>
+    </div>
+
+    <div class="chat-box">
+      <div class="msgs-area" id="msgArea">
+        <div class="msg ai">
+          <div class="m-av">✦</div>
+          <div class="m-bub" id="welcomeMsg">
+            Bonjour ! Je suis l'assistant SmartAdams 👋<br><br>
+            Je vous aide avec :<br>
+            • C++ et travaux pratiques<br>
+            • Traduction russe → français<br>
+            • Tous vos cours<br><br>
+            Que puis-je faire pour vous ?
+          </div>
+        </div>
+      </div>
+
+      <div class="chips-row" id="chipsRow">
+        <button class="chip" onclick="sendQ('Explique argc et argv en C++')">argc/argv</button>
+        <button class="chip" onclick="sendQ('Comment compiler C++ sous Linux ?')">Compiler</button>
+        <button class="chip" onclick="sendQ('Traduis : Обработка аргументов командной строки')">Traduire</button>
+        <button class="chip" onclick="sendQ('Explique le Labo №1')">Labo №1</button>
+      </div>
+
+      <div class="inp-bar">
+        <textarea class="ai-inp" id="aiInp"
+          placeholder="Votre question..."
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMsg()">➤</button>
+      </div>
+    </div>
+
+    <!-- TRANSLATOR -->
+    <div class="tr-card">
+      <div class="tr-title" data-fr="🌍 Traducteur RU → FR" data-ru="🌍 Переводчик RU → FR">🌍 Traducteur RU → FR</div>
+      <textarea class="tr-inp" id="trInp" placeholder="Collez le texte russe ici..."></textarea>
+      <button class="tr-btn" onclick="doTranslate()" data-fr="Traduire en français" data-ru="Перевести на французский">Traduire en français</button>
+      <div class="tr-out" id="trOut" data-fr="La traduction apparaîtra ici..." data-ru="Перевод появится здесь...">La traduction apparaîtra ici...</div>
+    </div>
+  </div>
+
+</div><!-- end scroll-content -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-tab active" onclick="goTo('home',0)">
+    <div class="nav-tab-icon">🏠</div>
+    <div class="nav-tab-label" data-fr="Accueil" data-ru="Главная">Accueil</div>
+  </button>
+  <button class="nav-tab" onclick="goTo('schedule',1)">
+    <div class="nav-tab-icon">📅</div>
+    <div class="nav-tab-label" data-fr="Emploi du temps" data-ru="Расписание">Emploi du temps</div>
+  </button>
+  <button class="nav-tab" onclick="goTo('ai',2)">
+    <div class="nav-tab-icon">🤖</div>
+    <div class="nav-tab-label" data-fr="Assistant IA" data-ru="ИИ">Assistant IA</div>
+  </button>
+</nav>
+
+<!-- NOTIF OVERLAY -->
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeNotif()"></div>
+
+<!-- NOTIF SHEET -->
+<div class="notif-sheet" id="notifSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <span class="sheet-title" data-fr="🔔 Notifications" data-ru="🔔 Уведомления">🔔 Notifications</span>
+    <button class="sheet-close" onclick="closeNotif()">✕</button>
+  </div>
+  <div class="sheet-body" id="notifBody"></div>
+</div>
+
+<script>
+// =============================================
+// LANGUAGE
+// =============================================
+let lang = 'fr';
+
+const T = {
+  fr: {
+    lec:'Cours', prac:'TD', lab:'TP',
+    empty: '<div class="empty-icon">🎉</div>Pas de cours !',
+    aiSys: `Tu es SmartAdams, un assistant IA professionnel pour les étudiants étrangers en Russie. Réponds principalement en FRANÇAIS. Tu aides avec: C++, algorithmes, traduction russe→français, vie universitaire en Russie. Sois concis et clair pour mobile.`,
+    welcome: `Bonjour ! Je suis l'assistant SmartAdams 👋<br><br>Je vous aide avec :<br>• C++ et travaux pratiques<br>• Traduction russe → français<br>• Tous vos cours<br><br>Que puis-je faire pour vous ?`,
+    chips: [
+      ['Explique argc et argv en C++','argc/argv'],
+      ['Comment compiler C++ sous Linux ?','Compiler'],
+      ['Traduis : Обработка аргументов командной строки','Traduire'],
+      ['Explique le Labo №1','Labo №1'],
+    ],
+    trPrompt: 'Traduis ce texte russe en français. Donne UNIQUEMENT la traduction:\n\n',
+    trPH: 'Collez le texte russe ici...',
+    trBtn: 'Traduire en français',
+    trEmpty: 'La traduction apparaîtra ici...',
+    notifTitle: '🔔 Notifications',
+    odd: 'Sem. Impaire', even: 'Sem. Paire',
+  },
+  ru: {
+    lec:'Лекция', prac:'Практика', lab:'Лаб.',
+    empty: '<div class="empty-icon">🎉</div>Нет занятий!',
+    aiSys: `Ты SmartAdams, профессиональный ИИ-ассистент для иностранных студентов в России. Отвечай на РУССКОМ. Помогай с: C++, алгоритмами, переводом русского на французский, университетской жизнью в России. Будь краток и понятен.`,
+    welcome: `Привет! Я ассистент SmartAdams 👋<br><br>Помогаю с:<br>• C++ и лабораторными работами<br>• Переводом с русского на французский<br>• Любыми учебными вопросами<br><br>Чем могу помочь?`,
+    chips: [
+      ['Объясни argc и argv в C++','argc/argv'],
+      ['Как скомпилировать C++ в Linux?','Компиляция'],
+      ['Переведи на французский: аргументы командной строки','Перевод'],
+      ['Объясни лабораторную работу №1','Лаб. №1'],
+    ],
+    trPrompt: 'Переведи этот русский текст на французский. Только перевод:\n\n',
+    trPH: 'Вставьте русский текст здесь...',
+    trBtn: 'Перевести на французский',
+    trEmpty: 'Перевод появится здесь...',
+    notifTitle: '🔔 Уведомления',
+    odd: 'Нечётная', even: 'Чётная',
+  }
+};
+
+function setLang(l, btn) {
+  lang = l;
+  document.querySelectorAll('.lp').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Update all translated elements
+  document.querySelectorAll('[data-fr]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + lang);
+  });
+  // Special HTML elements
+  document.getElementById('welcomeMsg').innerHTML = T[lang].welcome;
+  document.getElementById('aiInp').placeholder = lang==='fr'?'Votre question...':'Ваш вопрос...';
+  document.getElementById('trInp').placeholder = T[lang].trPH;
+  document.getElementById('trOut').textContent = T[lang].trEmpty;
+  // Rebuild chips
+  buildChips();
+  // Rebuild schedule & home
+  buildSchedule();
+  buildHome();
+  // Week buttons
+  document.querySelectorAll('.wb')[0].textContent = T[lang].odd;
+  document.querySelectorAll('.wb')[1].textContent = T[lang].even;
+}
+
+function buildChips() {
+  const r = document.getElementById('chipsRow');
+  r.innerHTML = T[lang].chips.map(([q,l]) =>
+    `<button class="chip" onclick="sendQ('${q.replace(/'/g,"\\'")}')"> ${l}</button>`
+  ).join('');
+}
+
+// =============================================
+// SCHEDULE DATA (real PDF)
+// =============================================
+const SCHED = {
+  odd:[
+    {day:'Lundi',ru:'Понедельник',idx:1,lessons:[
+      {time:'8:00–9:35',  name:'Anglais',                   ru:'Английский язык',               type:'prac',room:'6310', teacher:'Karakozova E.N.', sub:'Groupe 2 (Ivan)'},
+      {time:'9:45–11:25', name:'Sécurité de la vie',        ru:'БЖД',                           type:'prac',room:'6351/6347', teacher:'',             sub:''},
+      {time:'11:35–13:10',name:'Histoire de Russie',        ru:'История России',                type:'lec', room:'6245', teacher:'Gordina E.D.',    sub:''},
+      {time:'13:40–15:15',name:'Mathématiques',             ru:'Математика',                    type:'prac',room:'6151', teacher:'Nuyatov A.A.',    sub:''},
+    ]},
+    {day:'Mardi',ru:'Вторник',idx:2,lessons:[
+      {time:'8:00–9:35',  name:'Anglais',                   ru:'Английский язык',               type:'prac',room:'6317', teacher:'Erofeeva A.V.',   sub:'Groupe 1'},
+      {time:'9:45–11:25', name:'Philosophie',               ru:'Философия',                     type:'lec', room:'6126', teacher:'Mikhailova T.L.', sub:''},
+      {time:'11:35–13:10',name:'Mathématiques',             ru:'Математика',                    type:'lec', room:'6125', teacher:'Nuyatov A.A.',    sub:''},
+      {time:'13:40–15:15',name:'Programmation C++',         ru:'Программирование',              type:'lec', room:'6336', teacher:'Martynov D.S.',   sub:''},
+      {time:'15:25–17:00',name:'Anglais',                   ru:'Английский язык',               type:'prac',room:'6310', teacher:'Karakozova E.N.', sub:'Groupe 2 (Ivan)'},
+      {time:'15:25–17:00',name:'Programmation C++ (TP)',    ru:'Программирование лаб.',         type:'lab', room:'6252', teacher:'Martynov D.S.',   sub:'Groupe 3 (Espoir & Adams) · Sem.3,7,11,15'},
+      {time:'17:10–18:45',name:'Programmation C++ (TP)',    ru:'Программирование лаб.',         type:'lab', room:'6252', teacher:'Martynov D.S.',   sub:'Groupe 3 (Espoir & Adams) · Sem.3,7,11,15'},
+    ]},
+    {day:'Mercredi',ru:'Среда',idx:3,lessons:[
+      {time:'11:35–13:10',name:'Langue russe',              ru:'Русский язык',                  type:'prac',room:'1209', teacher:'Alekseeva N.A.',  sub:'Groupe 3 (Espoir, Ivan & Adams)'},
+      {time:'13:40–15:15',name:'Algorithmique (Cours)',     ru:'Основы алгоритмизации',         type:'lec', room:'5303', teacher:'Vikulova E.N.',   sub:''},
+      {time:'15:25–17:00',name:'Informatique (Cours)',      ru:'Информатика',                   type:'lec', room:'4201', teacher:'Stepanenko M.A.', sub:''},
+    ]},
+    {day:'Jeudi',ru:'Четверг',idx:4,lessons:[
+      {time:'9:45–11:25', name:'Physique (Cours)',          ru:'Физика лекция',                 type:'lec', room:'3301', teacher:'Vdovichenko I.A.',sub:''},
+      {time:'11:35–13:10',name:'Programmation C++ (TD)',    ru:'Программирование практика',     type:'prac',room:'3308', teacher:'Martynov D.S.',   sub:''},
+      {time:'13:40–15:15',name:'Programmation C++ (TP)',    ru:'Программирование лаб.',         type:'lab', room:'1337', teacher:'Martynov D.S.',   sub:'Groupe 1 · Sem.3,7,11,15 | Groupe 2 (Ivan) · Sem.5,9,13,17'},
+      {time:'13:40–15:15',name:'Informatique (TP)',         ru:'Информатика лаб.',              type:'lab', room:'4404', teacher:'Stepanenko M.A.', sub:'Groupe 1 · Sem.2,6,10,14 | Groupe 2 (Ivan) · Sem.4,8,12,16'},
+      {time:'15:25–17:00',name:'Programmation C++ (TP)',    ru:'Программирование лаб.',         type:'lab', room:'1337', teacher:'Martynov D.S.',   sub:'Groupe 1 · Sem.3,7,11,15 | Groupe 2 (Ivan) · Sem.5,9,13,17'},
+      {time:'15:25–17:00',name:'Informatique (TP)',         ru:'Информатика лаб.',              type:'lab', room:'4404', teacher:'Stepanenko M.A.', sub:'Groupe 1 · Sem.2,6,10,14 | Groupe 2 (Ivan) · Sem.4,8,12,16'},
+    ]},
+    {day:'Vendredi',ru:'Пятница',idx:5,lessons:[
+      {time:'8:00–9:35',  name:'Histoire de Russie (TD)',   ru:'История России практика',       type:'prac',room:'6410', teacher:'Fedorov I.D.',    sub:''},
+      {time:'9:45–11:25', name:'Sécurité de la vie (TP)',   ru:'БЖД лаб.',                     type:'lab', room:'6350', teacher:'Elkin A.B.',      sub:'Groupe 2 (Espoir, Adams & Ivan)'},
+    ]},
+    {day:'Samedi',ru:'Суббота',idx:6,lessons:[
+      {time:'10:00',name:'Éducation physique',ru:'Физическая культура',type:'prac',room:'Terrain sportif dortoir 3',teacher:'',sub:''},
+    ]},
+  ],
+  even:[
+    {day:'Lundi',ru:'Понедельник',idx:1,lessons:[
+      {time:'9:45–11:25', name:'Sécurité de la vie',        ru:'БЖД',                           type:'prac',room:'6351/6347', teacher:'',             sub:''},
+      {time:'11:35–13:10',name:'Histoire de Russie',        ru:'История России',                type:'lec', room:'6245', teacher:'Gordina E.D.',    sub:''},
+      {time:'13:40–15:15',name:'Mathématiques',             ru:'Математика',                    type:'prac',room:'6151', teacher:'Nuyatov A.A.',    sub:''},
+    ]},
+    {day:'Mardi',ru:'Вторник',idx:2,lessons:[
+      {time:'8:00–9:35',  name:'Anglais',                   ru:'Английский язык',               type:'prac',room:'6317', teacher:'Erofeeva A.V.',   sub:'Groupe 1'},
+      {time:'9:45–11:25', name:'Sécurité de la vie (Cours)',ru:'БЖД лекция',                   type:'lec', room:'6126', teacher:'Elkin A.B.',      sub:''},
+      {time:'11:35–13:10',name:'Mathématiques',             ru:'Математика',                    type:'lec', room:'6125', teacher:'Nuyatov A.A.',    sub:''},
+      {time:'13:40–15:15',name:'Programmation C++',         ru:'Программирование',              type:'lec', room:'6336', teacher:'Martynov D.S.',   sub:''},
+    ]},
+    {day:'Mercredi',ru:'Среда',idx:3,lessons:[
+      {time:'11:35–13:10',name:'Algorithmique (TD)',        ru:'Основы алгоритмизации практ.',  type:'prac',room:'3208', teacher:'Vikulova E.N.',   sub:''},
+      {time:'13:40–15:15',name:'Algorithmique (Cours)',     ru:'Основы алгоритмизации',         type:'lec', room:'5303', teacher:'Vikulova E.N.',   sub:''},
+      {time:'15:25–17:00',name:'Informatique (TP)',         ru:'Информатика лаб.',              type:'lab', room:'4403', teacher:'Stepanenko M.A.', sub:'Groupe 3 (Espoir & Adams) · Sem.4,8,12,16'},
+    ]},
+    {day:'Jeudi',ru:'Четверг',idx:4,lessons:[
+      {time:'9:45–11:25', name:'Physique (Cours)',          ru:'Физика лекция',                 type:'lec', room:'3301', teacher:'Vdovichenko I.A.',sub:''},
+      {time:'11:35–13:10',name:'Physique (TD)',             ru:'Физика практика',               type:'prac',room:'3309', teacher:'Rubtsova T.O.',   sub:''},
+      {time:'13:40–15:15',name:'Informatique (TP)',         ru:'Информатика лаб.',              type:'lab', room:'4404', teacher:'Stepanenko M.A.', sub:'Groupe 1 · Sem.2,6,10,14 | Groupe 2 (Ivan) · Sem.4,8,12,16'},
+      {time:'15:25–17:00',name:'Informatique (TP)',         ru:'Информатика лаб.',              type:'lab', room:'4404', teacher:'Stepanenko M.A.', sub:'Groupe 1 · Sem.2,6,10,14 | Groupe 2 (Ivan) · Sem.4,8,12,16'},
+    ]},
+    {day:'Vendredi',ru:'Пятница',idx:5,lessons:[
+      {time:'8:00–9:35',  name:'Histoire de Russie (TD)',   ru:'История России практика',       type:'prac',room:'6410', teacher:'Fedorov I.D.',    sub:''},
+      {time:'9:45–11:25', name:'Sécurité de la vie (TP)',   ru:'БЖД лаб.',                     type:'lab', room:'6350', teacher:'Elkin A.B.',      sub:'Groupe 1'},
+      {time:'11:35–13:10',name:'Philosophie (TD)',          ru:'Философия практика',            type:'prac',room:'6409', teacher:'Mikhailova T.L.', sub:''},
+    ]},
+    {day:'Samedi',ru:'Суббота',idx:6,lessons:[
+      {time:'10:00',name:'Éducation physique',ru:'Физическая культура',type:'prac',room:'Terrain sportif dortoir 3',teacher:'',sub:''},
+    ]},
+  ]
+};
+
+const C = {
+  'Programmation':'#6c5ce7','Mathématiques':'#00e5c0','Physique':'#ffd32a',
+  'Anglais':'#ff6b6b','Histoire':'#ff9f43','Philosophie':'#a29bfe',
+  'Algorithmique':'#00cec9','Informatique':'#fd79a8',
+  'Sécurité':'#55efc4','Éducation':'#fdcb6e',
+};
+function gc(n){for(const[k,v]of Object.entries(C))if(n.includes(k))return v;return'#6c5ce7';}
+
+let week = 'odd';
+function todayIdx(){const d=new Date().getDay();return d===0?7:d;}
+function getDay(idx){return(SCHED[week]||SCHED.odd).find(d=>d.idx===idx)||{lessons:[]};}
+function todayData(){return getDay(todayIdx());}
+function tomorrowData(){let d=new Date().getDay()+1;if(d>6)d=1;return getDay(d);}
+function boldNames(str) {
+  if (!str) return '';
+  return str.replace(/\(([^)]+)\)/g, '(<span class="names-bold">$1</span>)');
+}
+
+function lName(l){return lang==='ru'?(l.ru||l.name):l.name;}
+
+function renderList(lessons, id) {
+  const c = document.getElementById(id);
+  if (!lessons?.length) {
+    c.innerHTML = `<div class="empty-state">${T[lang].empty}</div>`;
+    return;
+  }
+  c.innerHTML = lessons.map(l=>`
+    <div class="lesson-card">
+      <div class="lesson-bar" style="background:${gc(l.name)}"></div>
+      <div class="lesson-info">
+        <div class="lesson-name">${lName(l)}</div>
+        <div class="lesson-meta">${l.teacher?l.teacher+' · ':''}${lang==='fr'?'Salle':'Ауд.'} ${l.room}${l.sub?' · '+boldNames(l.sub):''}</div>
+      </div>
+      <div class="lesson-time">${l.time}</div>
+    </div>
+  `).join('');
+}
+
+function buildHome() {
+  const t = todayData(), tm = tomorrowData();
+  document.getElementById('statToday').textContent = t.lessons?.length||0;
+  document.getElementById('statTomorrow').textContent = tm.lessons?.length||0;
+  renderList(t.lessons,'todayList');
+  renderList(tm.lessons,'tomorrowList');
+}
+
+function buildSchedule() {
+  const c = document.getElementById('schedList');
+  const ti = todayIdx();
+  c.innerHTML = '';
+  (SCHED[week]||SCHED.odd).forEach(day=>{
+    if(!day.lessons.length)return;
+    const isT = day.idx===ti;
+    const dn = lang==='ru'?day.ru:day.day;
+    c.innerHTML+=`
+      <div class="day-block">
+        <div class="day-top">
+          <span class="day-name-t">${dn}</span>
+          ${isT?`<span class="today-chip">${lang==='fr'?'✓ Aujourd\'hui':'✓ Сегодня'}</span>`:''}
+        </div>
+        <div class="day-inner">
+          ${day.lessons.map(l=>`
+            <div class="sl">
+              <span class="sl-time">${l.time}</span>
+              <div class="sl-dot" style="background:${gc(l.name)}"></div>
+              <div class="sl-body">
+                <div class="sl-name">${lName(l)}</div>
+                ${l.sub?`<div class="sl-sub">${boldNames(l.sub)}</div>`:''}
+              </div>
+              <div class="sl-right">
+                <span class="sl-badge b-${l.type}">${T[lang][l.type]||l.type}</span>
+                ${l.room?`<span class="sl-room">${l.room}</span>`:''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  });
+}
+
+function setWeek(w,btn){
+  week=w;
+  document.querySelectorAll('.wb').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  buildSchedule();
+}
+
+// =============================================
+// NAVIGATION
+// =============================================
+function goTo(name, idx) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+  if(name==='home')buildHome();
+  if(name==='schedule')buildSchedule();
+}
+
+// =============================================
+// AI CHAT
+// =============================================
+const hist=[];
+function addMsg(role,html){
+  hist.push({role,html});
+  const w=document.getElementById('msgArea');
+  const d=document.createElement('div');
+  d.className=`msg ${role}`;
+  d.innerHTML=`<div class="m-av">${role==='user'?'👤':'✦'}</div><div class="m-bub">${html}</div>`;
+  w.appendChild(d);w.scrollTop=w.scrollHeight;
+}
+function showTyping(){
+  const w=document.getElementById('msgArea');
+  const d=document.createElement('div');
+  d.className='msg ai';d.id='tyEl';
+  d.innerHTML=`<div class="m-av">✦</div><div class="m-bub"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  w.appendChild(d);w.scrollTop=w.scrollHeight;
+}
+function rmTyping(){const t=document.getElementById('tyEl');if(t)t.remove();}
+
+async function sendMsg(){
+  const inp=document.getElementById('aiInp');
+  const text=inp.value.trim();
+  if(!text)return;
+  inp.value='';
+  addMsg('user',text);
+  document.getElementById('sendBtn').disabled=true;
+  showTyping();
+  const msgs=hist.slice(0,-1).map(m=>({
+    role:m.role==='user'?'user':'assistant',
+    content:m.html.replace(/<[^>]+>/g,'')
+  }));
+  msgs.push({role:'user',content:text});
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:800,
+        system:T[lang].aiSys,
+        messages:msgs
+      })
+    });
+    const data=await r.json();
+    rmTyping();
+    if(data.content?.[0])addMsg('ai',data.content[0].text.replace(/\n/g,'<br>'));
+    else addMsg('ai',lang==='fr'?'Une erreur est survenue.':'Произошла ошибка.');
+  }catch(e){
+    rmTyping();
+    addMsg('ai',lang==='fr'?'⚠️ Vérifiez votre connexion.':'⚠️ Проверьте интернет.');
+  }
+  document.getElementById('sendBtn').disabled=false;
+}
+
+function sendQ(text){document.getElementById('aiInp').value=text;sendMsg();}
+
+// =============================================
+// TRANSLATOR
+// =============================================
+async function doTranslate(){
+  const text=document.getElementById('trInp').value.trim();
+  if(!text)return;
+  const out=document.getElementById('trOut');
+  out.textContent=lang==='fr'?'Traduction en cours...':'Переводим...';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:400,
+        messages:[{role:'user',content:T[lang].trPrompt+text}]
+      })
+    });
+    const d=await r.json();
+    out.textContent=d.content?.[0]?.text||(lang==='fr'?'Erreur.':'Ошибка.');
+  }catch(e){
+    out.textContent=lang==='fr'?'⚠️ Erreur connexion.':'⚠️ Ошибка.';
+  }
+}
+
+// =============================================
+// NOTIFICATIONS
+// =============================================
+function buildNotifs(){
+  const tm=tomorrowData();
+  const items=[
+    {type:'warn',
+     title:lang==='fr'?'⚠️ Labo №1 à rendre':'⚠️ Сдача Лаб. №1',
+     body:lang==='fr'?'Travail de laboratoire №1 à rendre cette semaine à Martynov D.S.':'Лабораторная №1 должна быть сдана на этой неделе Мартынову Д.С.',
+     time:lang==='fr'?'Cette semaine':'На этой неделе'},
+    {type:'',
+     title:lang==='fr'?'📅 Cours de demain':'📅 Занятия завтра',
+     body:tm.lessons?.length
+       ?(lang==='fr'?`${tm.lessons.length} cours demain. Premier: `:
+         `${tm.lessons.length} занятий завтра. Первое: `)+
+        `${lName(tm.lessons[0])} · ${tm.lessons[0].time} · Salle ${tm.lessons[0].room}`
+       :(lang==='fr'?'Pas de cours demain 🎉':'Завтра нет занятий 🎉'),
+     time:lang==='fr'?'Automatique':'Автоматически'},
+    {type:'info',
+     title:lang==='fr'?'📚 Nouveau matériel':'📚 Новые материалы',
+     body:lang==='fr'?'Partie 2 du manuel C++ de Martynov D.S. disponible en ligne.':'Часть 2 учебника C++ Мартынова Д.С. доступна в электронном виде.',
+     time:lang==='fr'?'Il y a 2 jours':'2 дня назад'},
+  ];
+  document.getElementById('notifBody').innerHTML=items.map(n=>`
+    <div class="n-item ${n.type}">
+      <div class="n-title">${n.title}</div>
+      <div class="n-body">${n.body}</div>
+      <div class="n-time">${n.time}</div>
+    </div>
+  `).join('');
+}
+
+function openNotif(){buildNotifs();document.getElementById('notifSheet').classList.add('open');document.getElementById('sheetOverlay').classList.add('show');}
+function closeNotif(){document.getElementById('notifSheet').classList.remove('open');document.getElementById('sheetOverlay').classList.remove('show');}
+
+// =============================================
+// PWA INSTALL
+// =============================================
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  document.getElementById('installBanner').classList.add('show');
+});
+function installApp(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(r=>{
+      if(r.outcome==='accepted')dismissInstall();
+      deferredPrompt=null;
+    });
+  }
+}
+function dismissInstall(){
+  document.getElementById('installBanner').classList.remove('show');
+}
+window.addEventListener('appinstalled',()=>dismissInstall());
+
+// =============================================
+// BROWSER NOTIFICATIONS
+// =============================================
+if('Notification'in window&&Notification.permission==='default'){
+  Notification.requestPermission();
+}
+
+// =============================================
+// INIT
+// =============================================
+buildHome();
+buildSchedule();
+buildChips();
+</script>
+</body>
+</html>
